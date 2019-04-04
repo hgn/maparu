@@ -1,5 +1,5 @@
 
-all: format build
+all: build
 
 build:
 	cargo build
@@ -14,5 +14,8 @@ test: build
 	cargo test
 
 format:
+	rustfmt src/*
+
+format-check:
 	cargo fmt --all -- --check
 
