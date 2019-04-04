@@ -1,5 +1,5 @@
 
-all: format build test
+all: format build
 
 build:
 	cargo build
@@ -10,7 +10,7 @@ release:
 run:
 	cargo run
 
-test:
+test: build
 	cargo test
 
 format:
