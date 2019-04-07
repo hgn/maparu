@@ -2,6 +2,7 @@ extern crate clap;
 use clap::{App, Arg, SubCommand};
 
 mod arch;
+mod server;
 
 fn main() {
     let matches = App::new("maparu")
