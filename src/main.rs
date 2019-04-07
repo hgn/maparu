@@ -4,6 +4,8 @@ use clap::{App, Arg, SubCommand};
 mod arch;
 mod server;
 
+const DEFAULT_PORT: &str = "64321";
+
 fn main() {
     let matches = App::new("maparu")
         .version("1.0.0")
@@ -23,6 +25,13 @@ fn main() {
                     Arg::with_name("verbose")
                         .short("v")
                         .help("print information verbosely, may limit performance"),
+                )
+                .arg(
+                    Arg::with_name("port")
+                        .short("p")
+                        .short("port")
+                        .takes_value(true)
+                        .help("port for control"),
                 ),
         )
         .subcommand(
@@ -45,6 +54,7 @@ fn main() {
 	}
 
 	if let Some(matches) = matches.subcommand_matches("server") {
+        let port = matches.value_of("port").unwrap_or(DEFAULT_PORT);
 		if matches.is_present("verbose") {
 			println!("Printing debug info...");
 		} else {
