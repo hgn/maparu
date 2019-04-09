@@ -4,9 +4,9 @@ use clap::{App, Arg, SubCommand};
 mod arch;
 mod server;
 
-const DEFAULT_PORT: &str = "64321";
+const DEFAULT_PORT: &str = "643ffffffffffffff21";
 
-fn parse_args() -> clap::ArgMatches<'static> {
+fn parse_args() -> clap::App<'static, 'static> {
     App::new("maparu")
         .version("1.0.0")
         .author("Hagen Paul Pfeifer <hagen@jauu.net>")
@@ -43,11 +43,24 @@ fn parse_args() -> clap::ArgMatches<'static> {
                         .help("print information verbosely, may limit performance"),
                 ),
         )
-        .get_matches()
+}
+
+fn parse_arg_server(matches: &clap::ArgMatches<'_>) -> server::SrvCtx {
+        if matches.is_present("verbose") {
+            println!("Printing debug info...");
+        };
+
+        let sport = matches.value_of("port").unwrap_or(DEFAULT_PORT);
+        let port = match sport.parse::<u32>() {
+            Ok(n) => n,
+            Err(e) => panic!("Not a valid port"),
+        };
+
+        server::SrvCtx { port: port }
 }
 
 fn main() {
-    let matches = parse_args();
+    let matches = parse_args().get_matches();
 
     match matches.occurrences_of("v") {
         0 => println!("No verbose info"),
@@ -57,7 +70,7 @@ fn main() {
     }
 
     if let Some(matches) = matches.subcommand_matches("server") {
-        let port = matches.value_of("port").unwrap_or(DEFAULT_PORT);
+        let ctx = parse_arg_server(matches);
         if matches.is_present("verbose") {
             println!("Printing debug info...");
         } else {
